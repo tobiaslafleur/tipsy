@@ -14,7 +14,8 @@
     "@typescript-eslint/no-unused-vars": [
       "warn",
       { "vars": "all", "argsIgnorePattern": "^_" }
-    ]
+    ],
+    "@typescript-eslint/no-namespace": ["ignore"]
   },
   "env": {
     "browser": true,

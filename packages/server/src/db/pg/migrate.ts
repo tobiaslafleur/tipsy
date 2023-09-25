@@ -1,8 +1,6 @@
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect, sql } from 'kysely';
 import fs from 'fs/promises';
-import logger from '~/lib/logger';
-import config from '~/lib/config';
 
 type Migration = {
   id: number;
@@ -15,9 +13,7 @@ const migrate = async () => {
 
   const db = new Kysely({
     dialect: new PostgresDialect({
-      pool: new Pool({
-        connectionString: config.DATABASE_URL,
-      }),
+      pool: new Pool({}),
     }),
   });
 
@@ -57,7 +53,6 @@ const migrate = async () => {
     }
   } catch (error) {
     console.log(error);
-    logger.error('Error running migrations', error);
   } finally {
     await db.destroy();
   }
@@ -92,7 +87,7 @@ const addNewMigration = async (newMigration: Migration) => {
 
     await fs.writeFile('./src/db/pg/migrations/migrations.json', json, 'utf-8');
   } catch (error) {
-    logger.error('Error adding migration history');
+    console.log(error);
   }
 };
 
