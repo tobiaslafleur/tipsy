@@ -1,0 +1,16 @@
+{
+  "name": "tipsy",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Tobias la Fleur",
+  "scripts": {
+    "build": "pnpm -r --parallel build",
+    "start": "pnpm -r --parallel start",
+    "dev": "pnpm -r --parallel dev",
+    "lint": "pnpm -r --parallel lint",
+    "format": "pnpm -r --parallel format",
+    "pg:migrate": "pnpm -r --parallel pg:migrate",
+    "pg:migrate-all": "pnpm -r --parallel pg:migrate --all",
+    "pg:types": "pnpm -r --parallel pg:types"
+  }
+}
