@@ -9,6 +9,11 @@
       "id": 2,
       "file": "0002_sessions.sql",
       "timestamp": 1695678574142
+    },
+    {
+      "id": 3,
+      "file": "0003_app.sql",
+      "timestamp": 1695740091419
     }
   ]
 }

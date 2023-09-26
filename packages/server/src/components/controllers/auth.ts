@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
-import pg from '~/db/pg';
-import { fetch } from '~/lib/utils';
-import {
-  DiscordOAuthMeResponse,
-  DiscordOAuthTokenResponse,
-} from '~/types/discord';
+
+import authService from '~/components/services/auth';
 
 async function signIn(request: Request, response: Response) {
   try {
@@ -12,7 +8,7 @@ async function signIn(request: Request, response: Response) {
 
     return response.redirect(signInUri);
   } catch (error) {
-    return response.status(500).send({ error: 'Something went wrong' });
+    return response.status(500).send({ error });
   }
 }
 
@@ -22,58 +18,31 @@ async function callback(request: Request, response: Response) {
 
     // TODO: return if no code exists
 
-    const body = new URLSearchParams({
-      client_id: String(process.env.DISCORD_CLIENT_ID),
-      client_secret: String(process.env.DISCORD_CLIENT_SECRET),
-      grant_type: 'authorization_code',
-      code,
-      redirect_uri: String(process.env.DISCORD_CALLBACK_URI),
+    const {
+      user: { id, global_name, avatar },
+    } = await authService.getDiscordUserByCode(code);
+
+    const user = await authService.createUser({
+      discord_id: id,
+      name: global_name,
+      avatar: avatar,
     });
 
-    const headers = {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept-Encoding': 'application/x-www-form-urlencoded',
-    };
+    if (!user) {
+      return response.status(500).send({ error: 'Error creating user' });
+    }
 
-    const { access_token } = await fetch<DiscordOAuthTokenResponse>(
-      `https://discord.com/api/oauth2/token`,
-      {
-        method: 'POST',
-        headers,
-        body,
-      }
-    );
+    const expires = new Date();
+    expires.setHours(24 * 7);
 
-    const { user } = await fetch<DiscordOAuthMeResponse>(
-      `https://discord.com/api/oauth2/@me`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
+    const session = await authService.createSession({
+      user_id: user.id,
+      expires,
+    });
 
-    const newUser = await pg
-      .insertInto('users')
-      .values({
-        discord_id: user.id,
-        avatar: user.avatar,
-        name: user.global_name,
-      })
-      .onConflict(oc =>
-        oc
-          .column('discord_id')
-          .doUpdateSet({ avatar: user.avatar, name: user.global_name })
-      )
-      .returningAll()
-      .executeTakeFirstOrThrow();
-
-    const session = await pg
-      .insertInto('sessions')
-      .values({ user_id: newUser.id })
-      .returning('id')
-      .executeTakeFirstOrThrow();
+    if (!session) {
+      return response.status(500).send({ error: 'Error creating session' });
+    }
 
     response.cookie('session', session.id, {
       httpOnly: true,
@@ -81,41 +50,39 @@ async function callback(request: Request, response: Response) {
       maxAge: 1000 * 60 * 60 * 24 * 7,
     });
 
-    const redirectUri = String(process.env.CLIENT_REDIRECT_URI);
-
-    return response.redirect(redirectUri);
+    return response.redirect(String(process.env.CLIENT_REDIRECT_URI));
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error: 'Something went wrong' });
   }
 }
 
 async function me(request: Request, response: Response) {
   try {
-    const user = await pg
-      .selectFrom('users')
-      .selectAll()
-      .where('id', '=', request.session?.user || '')
-      .executeTakeFirst();
+    if (!request.session) {
+      return response.status(403).send({ error: 'Unauthorized' });
+    }
 
-    return response.status(200).send({ ...user });
+    const user = await authService.getUserById(request.session.user);
+
+    return response
+      .status(200)
+      .send({ session: request.session.session, ...user });
   } catch (error) {
-    return response.status(500).send({ error: 'Something went wrong' });
+    return response.status(500).send({ error });
   }
 }
 
 async function signOut(request: Request, response: Response) {
   try {
-    await pg
-      .deleteFrom('sessions')
-      .where('id', '=', request.session?.session || '')
-      .executeTakeFirst();
+    if (request.session) {
+      await authService.deleteSession(request.session.session);
+    }
 
     response.clearCookie('session');
 
     return response.sendStatus(204);
   } catch (error) {
-    return response.status(500).send({ error: 'Something went wrong' });
+    return response.status(500).send({ error });
   }
 }
 

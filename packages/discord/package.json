@@ -1,0 +1,28 @@
+{
+  "name": "discord",
+  "version": "0.0.0",
+  "private": true,
+  "author": "Tobias la Fleur",
+  "scripts": {
+    "build": "tsc --build",
+    "start": "node dist/main.js",
+    "dev": "tsx watch --clear-screen=false src/main.ts",
+    "lint": "eslint --ext .js,.ts .",
+    "format": "prettier --write \"**/*.+(js|ts|json)\""
+  },
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "prettier": "^3.0.3",
+    "tsx": "^3.12.8",
+    "typescript": "^5.2.2"
+  }
+}
