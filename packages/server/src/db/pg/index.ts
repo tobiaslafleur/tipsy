@@ -4,7 +4,7 @@ import { DB } from 'kysely-codegen';
 
 const pg = new Kysely<DB>({
   dialect: new PostgresDialect({
-    pool: new Pool({}),
+    pool: new Pool({ connectionString: String(process.env.POSTGRES_URI) }),
   }),
 });
 

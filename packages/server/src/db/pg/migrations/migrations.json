@@ -1,1 +1,14 @@
-{}
+{
+  "migrations": [
+    {
+      "id": 1,
+      "file": "0001_users.sql",
+      "timestamp": 1695678434541
+    },
+    {
+      "id": 2,
+      "file": "0002_sessions.sql",
+      "timestamp": 1695678574142
+    }
+  ]
+}

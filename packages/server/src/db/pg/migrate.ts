@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { Pool } from 'pg';
 import { Kysely, PostgresDialect, sql } from 'kysely';
 import fs from 'fs/promises';
@@ -13,7 +15,7 @@ const migrate = async () => {
 
   const db = new Kysely({
     dialect: new PostgresDialect({
-      pool: new Pool({}),
+      pool: new Pool({ connectionString: String(process.env.POSTGRES_URI) }),
     }),
   });
 

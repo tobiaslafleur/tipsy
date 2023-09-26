@@ -5,7 +5,7 @@ export default function requireUser(
   response: Response,
   next: NextFunction
 ) {
-  if (!request.user) {
+  if (!request.session) {
     return response.sendStatus(403);
   }
 

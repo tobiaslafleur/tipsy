@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { fetch } from '~/lib/utils';
-import { DiscordOAuthMeResponse } from '~/types/discord';
+import pg from '~/db/pg';
 
 export default async function deserializeUser(
   request: Request,
@@ -8,27 +7,28 @@ export default async function deserializeUser(
   next: NextFunction
 ) {
   try {
-    //TODO: Reissue token if refresh token exists but not access_token
+    const { session } = request.cookies;
 
-    const { access_token, refresh_token } = request.cookies;
+    request.session = null;
 
-    request.user = null;
-
-    if (!access_token && !refresh_token) {
-      next();
+    if (!session) {
+      return next();
     }
 
-    const { user } = await fetch<DiscordOAuthMeResponse>(
-      `https://discord.com/api/oauth2/@me`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      }
-    );
+    const userSession = await pg
+      .selectFrom('sessions')
+      .selectAll()
+      .where('id', '=', session)
+      .executeTakeFirst();
 
-    request.user = user;
+    if (!userSession) {
+      return next();
+    }
+
+    request.session = {
+      session: userSession.id,
+      user: userSession.user_id,
+    };
 
     next();
   } catch (error) {
