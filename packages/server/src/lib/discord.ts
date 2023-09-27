@@ -1,11 +1,13 @@
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
 import WebSocket from 'ws';
+
 import pg from '~/db/pg';
 
+//TODO: Handle error if no websocket connection is made
 const ws = new WebSocket('ws://localhost:4001');
 
 export default async function sendDiscordNotification(task_id: string) {
-  const info = await pg
+  const task = await pg
     .selectFrom('game_task')
     .leftJoin('tasks', 'tasks.id', 'game_task.task_id')
     .leftJoin('teams as t', 't.id', 'game_task.team_id')
@@ -33,5 +35,5 @@ export default async function sendDiscordNotification(task_id: string) {
     .where('game_task.id', '=', task_id)
     .executeTakeFirst();
 
-  ws.send(JSON.stringify(info));
+  ws.send(JSON.stringify(task));
 }

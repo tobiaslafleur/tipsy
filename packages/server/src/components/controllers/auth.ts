@@ -14,10 +14,10 @@ async function signIn(request: Request, response: Response) {
 
 async function callback(request: Request, response: Response) {
   try {
+    // TODO: return if no code exists
     const code = String(request.query.code);
 
-    // TODO: return if no code exists
-
+    //TODO: Handle if this errors (prob with wrong code)
     const {
       user: { id, global_name, avatar },
     } = await authService.getDiscordUserByCode(code);
@@ -62,7 +62,7 @@ async function me(request: Request, response: Response) {
       return response.status(403).send({ error: 'Unauthorized' });
     }
 
-    const user = await authService.getUserById(request.session.user);
+    const user = await authService.getUserById(request.session.user.id);
 
     return response
       .status(200)

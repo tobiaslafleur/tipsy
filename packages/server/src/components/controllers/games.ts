@@ -133,7 +133,7 @@ async function updateGameTaskById(request: Request, response: Response) {
       request.body
     );
 
-    await sendDiscordNotification(request.params.task_id || '');
+    sendDiscordNotification(request.params.task_id || '');
 
     return response.sendStatus(200);
   } catch (error) {

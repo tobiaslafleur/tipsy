@@ -1,4 +1,4 @@
-import { InsertObject } from 'kysely';
+import { InsertObject, UpdateObject } from 'kysely';
 import { DB } from 'kysely-codegen';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
 
@@ -12,7 +12,35 @@ async function createTeam(values: InsertObject<DB, 'teams'>) {
     .executeTakeFirst();
 }
 
-async function getTeamsByGameId(gameId: string) {
+async function getTeamById(team_id: string) {
+  return await pg
+    .selectFrom('teams')
+    .where('id', '=', team_id)
+    .selectAll()
+    .executeTakeFirst();
+}
+
+async function updateTeamById(
+  team_id: string,
+  values: UpdateObject<DB, 'teams'>
+) {
+  return await pg
+    .updateTable('teams')
+    .where('id', '=', team_id)
+    .set(values)
+    .returningAll()
+    .executeTakeFirst();
+}
+
+async function deleteTeamById(team_id: string) {
+  return await pg
+    .deleteFrom('teams')
+    .where('id', '=', team_id)
+    .returningAll()
+    .executeTakeFirst();
+}
+
+async function getTeamsByGameId(game_id: string) {
   return await pg
     .selectFrom('teams')
     .select(eb => [
@@ -36,7 +64,7 @@ async function getTeamsByGameId(gameId: string) {
           .whereRef('user_in_team.team_id', '=', 'teams.id')
       ).as('users'),
     ])
-    .where('game_id', '=', gameId)
+    .where('game_id', '=', game_id)
     .execute();
 }
 
@@ -48,14 +76,21 @@ async function joinTeam(values: InsertObject<DB, 'user_in_team'>) {
     .executeTakeFirst();
 }
 
+async function leaveTeam(team_id: string, user_id: string) {
+  return await pg
+    .deleteFrom('user_in_team')
+    .where('team_id', '=', team_id)
+    .where('user_id', '=', user_id)
+    .returningAll()
+    .executeTakeFirst();
+}
+
 export default {
   createTeam,
+  getTeamById,
+  updateTeamById,
+  deleteTeamById,
   getTeamsByGameId,
   joinTeam,
+  leaveTeam,
 };
-
-/**
- * 
- * .leftJoin('user_in_team', 'user_in_team.team_id', 'teams.id')
-    .leftJoin('users', 'users.id', 'user_in_team.user_id')
- */

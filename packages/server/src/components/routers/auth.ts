@@ -11,6 +11,6 @@ router.get('/callback', authController.callback);
 
 router.get('/me', requireUser, authController.me);
 
-router.delete('/sign-out', authController.signOut);
+router.delete('/sign-out', requireUser, authController.signOut);
 
 export default router;
