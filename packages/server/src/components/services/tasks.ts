@@ -27,6 +27,7 @@ async function updateTaskById(
     .updateTable('tasks')
     .where('id', '=', task_id)
     .set(values)
+    .returningAll()
     .executeTakeFirst();
 }
 

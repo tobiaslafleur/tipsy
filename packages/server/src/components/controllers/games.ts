@@ -19,6 +19,51 @@ async function createGame(request: Request, response: Response) {
   }
 }
 
+async function getGameById(request: Request, response: Response) {
+  try {
+    const game = await gamesService.getGameById(request.params.id || '');
+
+    if (!game) {
+      return response.status(404).send({ error: 'Resource not found' });
+    }
+
+    return response.status(200).send(game);
+  } catch (error) {
+    return response.status(500).send({ error });
+  }
+}
+
+async function updateGameById(request: Request, response: Response) {
+  try {
+    const game = await gamesService.updateGameById(
+      request.params.id || '',
+      request.body
+    );
+
+    if (!game) {
+      return response.status(404).send({ error: 'Resource not found' });
+    }
+
+    return response.status(200).send(game);
+  } catch (error) {
+    return response.status(500).send({ error });
+  }
+}
+
+async function deleteGameById(request: Request, response: Response) {
+  try {
+    const game = await gamesService.deleteGameById(request.params.id || '');
+
+    if (!game) {
+      return response.status(404).send({ error: 'Resource not found' });
+    }
+
+    return response.status(204);
+  } catch (error) {
+    return response.status(500).send({ error });
+  }
+}
+
 async function getGames(request: Request, response: Response) {
   try {
     const games = await gamesService.getGames();
@@ -88,10 +133,6 @@ async function updateGameTaskById(request: Request, response: Response) {
       request.body
     );
 
-    console.log('I did it');
-
-    //TODO: Send discord notification
-
     await sendDiscordNotification(request.params.task_id || '');
 
     return response.sendStatus(200);
@@ -124,6 +165,9 @@ async function startGame(request: Request, response: Response) {
 
 export default {
   createGame,
+  getGameById,
+  updateGameById,
+  deleteGameById,
   getGames,
   getTeamsByGameId,
   getTasksByGameId,
