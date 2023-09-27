@@ -28,7 +28,7 @@ export default async function deserializeUser(
 
     const user = await pg
       .selectFrom('users')
-      .where('id', '=', userSession.id)
+      .where('id', '=', userSession.user_id)
       .selectAll()
       .executeTakeFirst();
 
