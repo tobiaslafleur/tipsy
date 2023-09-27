@@ -26,9 +26,19 @@ export default async function deserializeUser(
       return next();
     }
 
+    const user = await pg
+      .selectFrom('users')
+      .where('id', '=', userSession.id)
+      .selectAll()
+      .executeTakeFirst();
+
+    if (!user) {
+      return next();
+    }
+
     request.session = {
       session: userSession.id,
-      user: userSession.user_id,
+      user,
     };
 
     next();

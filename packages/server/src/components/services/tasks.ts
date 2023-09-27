@@ -1,5 +1,6 @@
-import { InsertObject } from 'kysely';
+import { InsertObject, UpdateObject } from 'kysely';
 import { DB } from 'kysely-codegen';
+
 import pg from '~/db/pg';
 
 async function createTask(values: InsertObject<DB, 'tasks'>) {
@@ -8,6 +9,33 @@ async function createTask(values: InsertObject<DB, 'tasks'>) {
     .values(values)
     .returningAll()
     .executeTakeFirst();
+}
+
+async function getTaskById(task_id: string) {
+  return await pg
+    .selectFrom('tasks')
+    .where('id', '=', task_id)
+    .selectAll()
+    .executeTakeFirst();
+}
+
+async function updateTaskById(
+  task_id: string,
+  values: UpdateObject<DB, 'tasks'>
+) {
+  return await pg
+    .updateTable('tasks')
+    .where('id', '=', task_id)
+    .set(values)
+    .executeTakeFirst();
+}
+
+async function deleteTaskById(task_id: string) {
+  return await pg
+    .deleteFrom('tasks')
+    .where('id', '=', task_id)
+    .returningAll()
+    .execute();
 }
 
 async function getTasksByGameId(game_id: string) {
@@ -51,6 +79,9 @@ async function getFeedByGameId(game_id: string) {
 
 export default {
   createTask,
+  getTaskById,
+  updateTaskById,
+  deleteTaskById,
   getTasksByGameId,
   getTasksByUserId,
   getFeedByGameId,

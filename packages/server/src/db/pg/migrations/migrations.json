@@ -24,6 +24,11 @@
       "id": 5,
       "file": "0005_game_task.sql",
       "timestamp": 1695769688272
+    },
+    {
+      "id": 6,
+      "file": "0006_alter_user.sql",
+      "timestamp": 1695835436474
     }
   ]
 }
