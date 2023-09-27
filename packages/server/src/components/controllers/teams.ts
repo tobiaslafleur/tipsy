@@ -12,7 +12,6 @@ async function createTeam(request: Request, response: Response) {
 
     return response.status(201).send(team);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }
@@ -27,7 +26,6 @@ async function getTeamById(request: Request, response: Response) {
 
     return response.status(200).send(team);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }
@@ -45,7 +43,6 @@ async function updateTeamById(request: Request, response: Response) {
 
     return response.status(200).send(team);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }
@@ -60,7 +57,6 @@ async function deleteTeamById(request: Request, response: Response) {
 
     return response.sendStatus(204);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }
@@ -68,8 +64,8 @@ async function deleteTeamById(request: Request, response: Response) {
 async function joinTeam(request: Request, response: Response) {
   try {
     const team = await teamsService.joinTeam({
-      ...request.body,
-      team_id: request.params.id,
+      team_id: request.params.id || '',
+      user_id: request.session?.user.id || '',
     });
 
     if (!team) {
@@ -78,7 +74,6 @@ async function joinTeam(request: Request, response: Response) {
 
     return response.status(200).send(team);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }
@@ -94,9 +89,8 @@ async function leaveTeam(request: Request, response: Response) {
       return response.status(404).send({ error: 'Something went wrong' });
     }
 
-    return response.status(204);
+    return response.sendStatus(204);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }

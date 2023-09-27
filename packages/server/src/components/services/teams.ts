@@ -69,6 +69,28 @@ async function getTeamsByGameId(game_id: string) {
 }
 
 async function joinTeam(values: InsertObject<DB, 'user_in_team'>) {
+  const { game_id } = await pg
+    .selectFrom('teams')
+    .where('id', '=', values.team_id as string)
+    .select('game_id')
+    .executeTakeFirstOrThrow();
+
+  const res = await pg
+    .selectFrom('user_in_team')
+    .leftJoin('teams', 'teams.id', 'user_in_team.team_id')
+    .leftJoin('games', 'games.id', 'teams.game_id')
+    .where('user_in_team.user_id', '=', values.user_id)
+    .where('games.id', '=', game_id)
+    .select(({ fn }) => [fn.count<number>('user_in_team.user_id').as('count')])
+    .groupBy('user_in_team.user_id')
+    .executeTakeFirst();
+
+  console.log('asdasd');
+
+  if (res && res.count > 0) {
+    throw new Error('Already in team');
+  }
+
   return await pg
     .insertInto('user_in_team')
     .values(values)

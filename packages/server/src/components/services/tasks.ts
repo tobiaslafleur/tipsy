@@ -70,9 +70,20 @@ async function getFeedByGameId(game_id: string) {
   return await pg
     .selectFrom('game_task')
     .leftJoin('tasks', 'tasks.id', 'game_task.task_id')
+    .leftJoin('teams as t', 't.id', 'game_task.team_id')
+    .leftJoin('teams as st', 'st.id', 'game_task.selected_team')
     .where('completed', '=', true)
     .where('tasks.game_id', '=', game_id)
-    .selectAll()
+    .select([
+      'game_task.id as id',
+      'game_task.completed as completed',
+      'game_task.completed_at as completed_at',
+      'game_task.image as image',
+      'tasks.title',
+      't.name as team_name',
+      'st.name as selected_team_name',
+      'tasks.weight as weight',
+    ])
     .orderBy('completed_at desc')
     .limit(10)
     .execute();

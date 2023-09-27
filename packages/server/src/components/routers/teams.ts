@@ -8,6 +8,10 @@ const router = Router();
 
 router.post('/', requireUser, teamsController.createTeam);
 
+router.get('/:id', teamsController.getTeamById);
+
+router.put('/:id', requireAdmin, teamsController.updateTeamById);
+
 router.delete('/:id', requireAdmin, teamsController.deleteTeamById);
 
 router.post('/:id/join', requireUser, teamsController.joinTeam);

@@ -32,9 +32,8 @@ export default function TeamBox({ team }: Props) {
 
   const isMember = team.users.some((user) => user.id === session?.id);
 
-  async function handleClick() {
-    const endpoint = isMember ? 'leave' : 'join';
-    const method = isMember ? 'DELETE' : 'POST';
+  async function handleTeamStatus(endpoint: 'join' | 'leave') {
+    const method = endpoint === 'join' ? 'POST' : 'DELETE';
 
     await tipsyFetch(
       `http://localhost:4000/api/v1/teams/${team.id}/${endpoint}`,
@@ -44,7 +43,6 @@ export default function TeamBox({ team }: Props) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ user_id: session?.id }),
       }
     );
 
@@ -61,14 +59,14 @@ export default function TeamBox({ team }: Props) {
         {isMember ? (
           <button
             className="text-gray-200  px-4 py-2 bg-red-700 rounded-md"
-            onClick={handleClick}
+            onClick={() => handleTeamStatus('leave')}
           >
             Leave team
           </button>
         ) : (
           <button
             className="text-gray-200 px-4 py-2 bg-green-700 rounded-md"
-            onClick={handleClick}
+            onClick={() => handleTeamStatus('join')}
           >
             Join team
           </button>
