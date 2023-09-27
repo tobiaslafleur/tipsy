@@ -15,15 +15,19 @@ export default function Navbar() {
   const [rotating, setRotating] = useState(false);
 
   return (
-    <div className="w-full border-b border-gray-700 shadow-sm">
+    <div className="w-full shadow-sm bg-[#292929]">
       <div className="container mx-auto py-4">
         <nav className="flex items-center justify-between">
-          <Link href="/" className="text-gray-50 flex-1">
-            <h1 className="text-4xl font-semibold uppercase">Tipsy HC</h1>
-            <p className="text-left px-1 text-base font-semibold uppercase">
-              Helyxia
-            </p>
-          </Link>
+          <div className="flex flex-1">
+            <Link href="/">
+              <h1 className="text-4xl font-semibold uppercase text-[#FF700A]">
+                Tipsy HC
+              </h1>
+              <p className="text-left px-1 text-base font-semibold uppercase text-gray-200">
+                Helyxia
+              </p>
+            </Link>
+          </div>
           {session ? (
             <>
               <ul className="flex gap-8 items-center">
@@ -31,7 +35,7 @@ export default function Navbar() {
                   <li key={idx}>
                     <Link
                       href={link.href}
-                      className="text-base font-medium text-gray-50"
+                      className="text-base font-medium text-gray-200"
                     >
                       {link.label}
                     </Link>
@@ -40,11 +44,15 @@ export default function Navbar() {
               </ul>
               <div className="flex gap-8 items-center flex-1 justify-end">
                 <div className="flex items-center gap-4">
-                  <p className="text-base font-medium text-gray-50">
+                  <p className="text-base font-medium text-gray-200">
                     {!rotating ? session.name : "I'm dizzy..."}
                   </p>
                   <Image
-                    src={`https://cdn.discordapp.com/avatars/${session.discord_id}/${session.avatar}`}
+                    src={
+                      session.avatar
+                        ? `https://cdn.discordapp.com/avatars/${session.discord_id}/${session.avatar}`
+                        : 'https://cdn.discordapp.com/embed/avatars/1.png'
+                    }
                     alt="avatar"
                     width={40}
                     height={40}
@@ -56,7 +64,7 @@ export default function Navbar() {
                 </div>
                 <button
                   onClick={signOut}
-                  className="text-base font-medium text-gray-50 border border-gray-50 px-4 py-2 rounded-md hover:text-darkbg hover:bg-gray-200 transition-colors"
+                  className="text-base font-medium text-[#FF700A] border-2 border-[#FF700A] px-4 py-2 rounded-md hover:text-[#292929] hover:bg-[#FF700A] transition-colors"
                 >
                   Sign out
                 </button>

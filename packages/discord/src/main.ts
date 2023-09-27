@@ -1,27 +1,41 @@
-import { ChannelType, Client, GatewayIntentBits } from 'discord.js';
 import 'dotenv/config';
-
-const client = new Client({
-  intents: [GatewayIntentBits.Guilds],
-});
+import { ChannelType, Client, GatewayIntentBits } from 'discord.js';
+import { WebSocketServer } from 'ws';
 
 async function main() {
-  await client.login(String(process.env.DISCORD_TOKEN));
-
-  const channel = await client.channels.fetch('1156046795684712479', {
-    cache: true,
+  const client = new Client({
+    intents: [GatewayIntentBits.Guilds],
   });
 
-  if (channel?.type === ChannelType.GuildText) {
-    channel?.send({
-      content:
-        'Team Blue has completed "Picture with stitches" and has awarded their 5 sips to team Red <@147702951840972800> <@147702951840972800>',
-    });
+  await client.login(String(process.env.DISCORD_TOKEN));
 
-    channel?.send(
-      'https://cdn.discordapp.com/avatars/147702951840972800/5a8a0fed65a899e7b114e729adb3cff3'
-    );
-  }
+  const channel = await client.channels.fetch(
+    String(process.env.DISCORD_CHANNEL)
+  );
+
+  const wss = new WebSocketServer({
+    port: 4001,
+  });
+
+  wss.on('connection', ws => {
+    ws.on('message', data => {
+      const obj = JSON.parse(data.toString());
+
+      if (channel?.type === ChannelType.GuildText) {
+        const users = obj.selected_team
+          .map((user: any) => `<@${user.discord_id}>`)
+          .join(' ');
+
+        channel?.send({
+          content: `${obj.team_name} has completed "${obj.title}" and has awarded their ${obj.weight} sips to ${obj.selected_team_name} ${users}`,
+        });
+
+        channel?.send(
+          'https://wow.zamimg.com/uploads/screenshots/normal/63719-stitches.jpg'
+        );
+      }
+    });
+  });
 }
 
 main();

@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import Navbar from '~/components/navbar';
 import useServerSession from '~/lib/session';
 import SessionContextProvider from '~/providers/session';
+import QueryContextProvider from '~/providers/query';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,13 +21,15 @@ export default async function RootLayout({
   const session = await useServerSession();
 
   return (
-    <SessionContextProvider session={session}>
-      <html lang="en">
-        <body className={inter.className}>
-          <Navbar />
-          {children}
-        </body>
-      </html>
-    </SessionContextProvider>
+    <QueryContextProvider>
+      <SessionContextProvider session={session}>
+        <html lang="en">
+          <body className={inter.className}>
+            <Navbar />
+            {children}
+          </body>
+        </html>
+      </SessionContextProvider>
+    </QueryContextProvider>
   );
 }

@@ -9,6 +9,8 @@ type Session = {
   discord_id: string;
   name: string;
   avatar: string;
+  created_at: string;
+  updated_at: string;
 };
 
 type SessionContext = {
@@ -21,7 +23,7 @@ const sessionContext = createContext<SessionContext>({
   session: undefined,
 });
 
-const SessionContexProvider = ({
+const SessionContextProvider = ({
   children,
   session: initialSession,
 }: {
@@ -57,6 +59,6 @@ const SessionContexProvider = ({
   );
 };
 
-export default SessionContexProvider;
+export default SessionContextProvider;
 
 export const useSession = () => useContext(sessionContext);

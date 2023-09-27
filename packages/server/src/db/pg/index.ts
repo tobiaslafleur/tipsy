@@ -6,6 +6,9 @@ const pg = new Kysely<DB>({
   dialect: new PostgresDialect({
     pool: new Pool({ connectionString: String(process.env.POSTGRES_URI) }),
   }),
+  log: ({ query }) => {
+    //console.log(query);
+  },
 });
 
 export default pg;
