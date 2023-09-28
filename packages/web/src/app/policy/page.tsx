@@ -1,4 +1,4 @@
-export default function PrivacyPolicy() {
+export default function Page() {
   return (
     <div className="container mx-auto text-gray-200">
       <h1>Privacy Policy</h1>

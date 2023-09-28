@@ -1,10 +1,9 @@
 import './globals.css';
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navbar from '~/components/navbar';
-import useServerSession from '~/lib/session';
-import SessionContextProvider from '~/providers/session';
-import QueryContextProvider from '~/providers/query';
+
+import Providers from '~/components/Providers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,18 +17,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await useServerSession();
-
   return (
-    <QueryContextProvider>
-      <SessionContextProvider session={session}>
-        <html lang="en">
-          <body className={inter.className}>
-            <Navbar />
-            {children}
-          </body>
-        </html>
-      </SessionContextProvider>
-    </QueryContextProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   );
 }

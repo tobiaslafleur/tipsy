@@ -1,4 +1,4 @@
-export default function TermsOfService() {
+export default function Page() {
   return (
     <div className="container mx-auto text-gray-200">
       <h2>Terms and Conditions</h2>

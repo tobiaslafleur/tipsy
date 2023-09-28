@@ -1,5 +1,3 @@
-'use client';
-
-export default function Home() {
+export default function Page() {
   return <main></main>;
 }

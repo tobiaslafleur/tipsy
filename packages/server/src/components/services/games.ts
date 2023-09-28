@@ -94,7 +94,7 @@ async function updateGameTaskById(
 ) {
   return await pg
     .updateTable('game_task')
-    .set({ ...values, completed: true })
+    .set({ ...values, completed: true, completed_at: new Date() })
     .where('id', '=', game_task_id)
     .execute();
 }
