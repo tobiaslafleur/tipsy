@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 0, 0%, 16%;
+  --foreground: 0, 0%, 24%;
+  --header: 0, 0%, 11%;
+  --primary: 16, 91%, 52%;
+  --secondary: 296, 43%, 30%;
+}
+
 html {
-  background-color: #1b1b1b;
+  background-color: hsl(var(--background));
 }

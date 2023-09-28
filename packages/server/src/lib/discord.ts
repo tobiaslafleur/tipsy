@@ -6,6 +6,15 @@ import pg from '~/db/pg';
 //TODO: Handle error if no websocket connection is made
 const ws = new WebSocket('ws://localhost:4001');
 
+ws.on('error', error => {
+  if ('code' in error && error.code === 'ECONNREFUSED') {
+    console.error('Unable to connect to websocket');
+    return;
+  }
+
+  console.error(error);
+});
+
 export default async function sendDiscordNotification(task_id: string) {
   const task = await pg
     .selectFrom('game_task')
