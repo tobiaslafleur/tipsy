@@ -9,3 +9,6 @@ export async function fetch<T>(url: string, opts?: RequestInit) {
 
   return data as T;
 }
+
+export const sleep = (duration: number) =>
+  new Promise(resolve => setTimeout(resolve, duration));

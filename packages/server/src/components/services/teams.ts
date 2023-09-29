@@ -85,8 +85,6 @@ async function joinTeam(values: InsertObject<DB, 'user_in_team'>) {
     .groupBy('user_in_team.user_id')
     .executeTakeFirst();
 
-  console.log('asdasd');
-
   if (res && res.count > 0) {
     throw new Error('Already in team');
   }

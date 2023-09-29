@@ -3,11 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --background: 0, 0%, 16%;
-  --foreground: 0, 0%, 24%;
-  --header: 0, 0%, 11%;
-  --primary: 16, 91%, 52%;
-  --secondary: 296, 43%, 30%;
+  --background: 0 0% 16%;
+  --foreground: 0 0% 24%;
+  --header: 0 0% 11%;
+  --primary: 16 65% 44%;
+  --secondary: 272 72% 47%;
+  --destructive: 0 69% 50%;
 }
 
 html {

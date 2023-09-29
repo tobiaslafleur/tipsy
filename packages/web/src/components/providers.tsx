@@ -8,8 +8,10 @@ export default async function Providers({ children }: { children: ReactNode }) {
   const session = await useServerSession();
 
   return (
-    <SessionContextProvider session={session}>
-      <QueryContextProvider>{children}</QueryContextProvider>
-    </SessionContextProvider>
+    <QueryContextProvider>
+      <SessionContextProvider session={session}>
+        {children}
+      </SessionContextProvider>
+    </QueryContextProvider>
   );
 }

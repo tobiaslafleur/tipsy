@@ -8,7 +8,7 @@ const ProtectedLayout = async ({ children }: { children: ReactNode }) => {
   if (!session) redirect('/');
 
   return session ? (
-    <div className="container mx-auto mt-4">{children}</div>
+    <div className="container mx-auto flex-1">{children}</div>
   ) : null;
 };
 

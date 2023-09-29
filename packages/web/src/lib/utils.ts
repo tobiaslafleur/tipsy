@@ -6,7 +6,9 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function tipsyFetch<T>(url: string, opts?: RequestInit) {
-  const res = await fetch(url, opts);
+  const queryUrl = `${process.env.BASE_URL}${url}`;
+
+  const res = await fetch(queryUrl, opts);
 
   if (!res.ok) throw new Error('Failed to fetch');
 
@@ -14,3 +16,6 @@ export async function tipsyFetch<T>(url: string, opts?: RequestInit) {
 
   return data as T;
 }
+
+export const sleep = (duration: number) =>
+  new Promise(resolve => setTimeout(resolve, duration));

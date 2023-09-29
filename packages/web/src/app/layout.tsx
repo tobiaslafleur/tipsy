@@ -2,9 +2,11 @@ import './globals.css';
 
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
-import Header from '~/components/header';
 
+import Footer from '~/components/footer';
+import Header from '~/components/header';
 import Providers from '~/components/providers';
+import { Toaster } from '~/components/ui/toaster';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -13,7 +15,7 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: 'Tipsy',
-  description: 'Helyxia hardcore tipsy challenge',
+  description: 'A place to host your drinking events',
 };
 
 export default async function RootLayout({
@@ -23,10 +25,12 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className}`}>
+      <body className={`${poppins.className} flex min-h-screen flex-col`}>
         <Providers>
           <Header />
           {children}
+          <Toaster />
+          <Footer />
         </Providers>
       </body>
     </html>
