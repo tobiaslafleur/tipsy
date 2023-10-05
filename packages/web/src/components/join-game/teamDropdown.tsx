@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
+import { Game } from '~/app/(protected)/join-game/page';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
@@ -11,12 +12,30 @@ import { useToast } from '~/components/ui/use-toast';
 import { tipsyFetch } from '~/lib/utils';
 import { useSession } from '~/providers/session';
 
+export type Team = {
+  id: string;
+  game_id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+  users: User[];
+};
+
+export type User = {
+  id: string;
+  discord_id: string;
+  name: string;
+  avatar: string;
+  created_at: string;
+  updated_at: string;
+};
+
 export default function TeamDropdown({
   teams,
-  gameId,
+  game,
 }: {
-  teams: any[] | undefined;
-  gameId: string;
+  teams: Team[];
+  game: Game;
 }) {
   const { session } = useSession();
   const queryClient = useQueryClient();
@@ -40,10 +59,9 @@ export default function TeamDropdown({
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['teams', gameId]);
+      queryClient.invalidateQueries(['teams', game.id]);
     },
-    onError: error => {
-      console.log('In here');
+    onError: () => {
       toast({
         variant: 'destructive',
         title: 'You can only join one team per game!',
@@ -52,19 +70,30 @@ export default function TeamDropdown({
     },
   });
 
+  const teamsAvailable = teams?.length > 0;
+
   return (
     <>
       <span
         className="relative inline-flex cursor-pointer items-center gap-2 text-right text-sm font-semibold text-gray-200"
-        onClick={() => setHidden(prev => !prev)}
+        onClick={() => {
+          if (!teamsAvailable) return;
+          setHidden(prev => !prev);
+        }}
       >
-        <ChevronDown
-          strokeWidth={3}
-          className={`h-5 w-5 ${
-            hidden ? 'rotate-0' : '-rotate-180'
-          }  transition`}
-        />
-        {hidden ? 'Show teams' : 'Hide teams'}
+        {teamsAvailable ? (
+          <ChevronDown
+            strokeWidth={3}
+            className={`h-5 w-5 ${
+              hidden ? 'rotate-0' : '-rotate-180'
+            }  transition`}
+          />
+        ) : null}
+        {!teamsAvailable
+          ? 'There are no teams signed up for this game.'
+          : hidden
+          ? 'Show teams'
+          : 'Hide teams'}
       </span>
       <AnimatePresence>
         {!hidden ? (
@@ -127,7 +156,7 @@ export default function TeamDropdown({
                           ? 'destructive'
                           : 'secondary'
                       }
-                      className="text-gray-200"
+                      className="select-none text-gray-200 disabled:bg-gray-400/20"
                       onClick={() =>
                         mutate({
                           teamId: team.id,
@@ -138,8 +167,11 @@ export default function TeamDropdown({
                             : 'join',
                         })
                       }
+                      disabled={game.started || game.finished}
                     >
-                      {team.users.find((u: any) => u.id === session?.id)
+                      {game.started || game.finished
+                        ? 'Unavailable'
+                        : team.users.find((u: any) => u.id === session?.id)
                         ? 'Leave team'
                         : 'join team'}
                     </Button>

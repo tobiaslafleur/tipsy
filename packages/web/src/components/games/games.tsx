@@ -1,19 +1,24 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
+
 import { Game } from '~/app/(protected)/join-game/page';
-import Teams from '~/components/join-game/teams';
+import { Button } from '~/components/ui/button';
+import { tipsyFetch } from '~/lib/utils';
 
-import GamePopover from '~/components/join-game/gamePopover';
+export default function MyGames() {
+  const { data: games } = useQuery({
+    queryKey: ['upcoming-games'],
+    queryFn: async () => {
+      return await tipsyFetch<Game[]>('/games/');
+    },
+  });
 
-export default function UpcomingGames({
-  initialGames,
-}: {
-  initialGames: Game[];
-}) {
   return (
     <div className="mt-4 flex flex-col gap-8">
-      {initialGames.length > 1 ? (
-        initialGames?.map(game => (
+      {games?.length && games?.length > 0 ? (
+        games?.map(game => (
           <div key={game.id} className="w-full rounded-md bg-header p-4">
             <div className="flex items-center justify-between">
               <div className="flex flex-col">
@@ -22,13 +27,13 @@ export default function UpcomingGames({
                     {game.title}
                   </h3>
                   <span
-                    className={`rounded-md px-2 py-0.5 text-sm ${
+                    className={`rounded-md bg-green-400/30 px-2 py-0.5 text-sm ${
                       !game.started
                         ? 'bg-yellow-400/20 text-yellow-400'
                         : game.finished
                         ? 'bg-red-400/20 text-red-400'
                         : 'bg-green-400/20 text-green-400'
-                    }`}
+                    } `}
                   >
                     {!game.started
                       ? 'Waiting for game to start'
@@ -39,14 +44,21 @@ export default function UpcomingGames({
                 </div>
                 <span className="text-sm text-gray-400">Hosted by Helyxia</span>
               </div>
-              <GamePopover game={game} />
+
+              <Button
+                disabled={!game.started || game.finished}
+                className="select-none text-gray-200 disabled:bg-gray-400/20"
+              >
+                <Link href={`/play/${game.id}`}>
+                  {!game.started || game.finished ? 'Unavailable' : 'Play now'}
+                </Link>
+              </Button>
             </div>
-            <Teams game={game} />
           </div>
         ))
       ) : (
         <p className="text-sm text-gray-400">
-          No games found, please check in again later!
+          You need to join a game to play!
         </p>
       )}
     </div>

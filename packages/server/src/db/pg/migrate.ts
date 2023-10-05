@@ -24,7 +24,7 @@ const migrate = async () => {
 
     const currentMigration = currentMigrations.slice(-1)[0];
 
-    const migrations = await fs.readdir('./src/db//pg/migrations');
+    const migrations = await fs.readdir('./src/db/pg/migrations');
 
     const filteredMigrations = migrations.filter(
       migration => migration.split('.')[1] === 'sql'

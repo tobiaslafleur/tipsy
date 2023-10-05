@@ -1,5 +1,5 @@
-DROP TABLE users;
-DROP TABLE sessions;
+DROP TABLE IF exists users;
+DROP TABLE IF exists sessions;
 
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$

@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { Game } from '~/app/(protected)/join-game/page';
 import { Button } from '~/components/ui/button';
 import {
   Form,
@@ -21,7 +22,7 @@ import {
 } from '~/components/ui/popover';
 import { tipsyFetch } from '~/lib/utils';
 
-export default function GamePopover({ gameId }: { gameId: string }) {
+export default function GamePopover({ game }: { game: Game }) {
   const queryClient = useQueryClient();
 
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -34,12 +35,12 @@ export default function GamePopover({ gameId }: { gameId: string }) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ game_id: gameId, name }),
+        body: JSON.stringify({ game_id: game.id, name }),
       });
     },
     onSuccess: () => {
       setPopoverOpen(false);
-      queryClient.invalidateQueries(['teams', gameId]);
+      queryClient.invalidateQueries(['teams', game.id]);
     },
   });
 
@@ -53,7 +54,12 @@ export default function GamePopover({ gameId }: { gameId: string }) {
   return (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
       <PopoverTrigger asChild>
-        <Button className="text-gray-200">Create new team</Button>
+        <Button
+          disabled={game.started || game.finished}
+          className="select-none text-gray-200 disabled:bg-gray-400/20"
+        >
+          {game.started || game.finished ? 'Unavailable' : 'Create new team'}
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="border-foreground bg-background">
         <Form {...form}>

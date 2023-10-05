@@ -5,7 +5,7 @@ import Teams from '~/components/join-game/teams';
 
 import GamePopover from '~/components/join-game/gamePopover';
 
-export default function UpcomingGames({
+export default function DashboardGames({
   initialGames,
 }: {
   initialGames: Game[];
