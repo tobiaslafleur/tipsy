@@ -21,4 +21,4 @@ EXPOSE 4000
 USER node
 
 # Run npm start script when container starts
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/main.js" ]
