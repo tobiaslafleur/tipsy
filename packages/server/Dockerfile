@@ -5,12 +5,12 @@ FROM node:alpine
 WORKDIR /usr/app
 
 COPY package.json ./
-RUN npm install
+RUN yarn install
 
 COPY . .
 
 # Build app
-RUN npm run build
+RUN yarn build
 
 EXPOSE 4000
 
