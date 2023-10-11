@@ -4,7 +4,7 @@
   "private": true,
   "author": "Tobias la Fleur",
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --project tsconfig.json && tscpaths -p tsconfig.json -s ./src -o ./dist",
     "start": "node dist/main.js",
     "dev": "tsx watch --clear-screen=false src/main.ts",
     "lint": "eslint --ext .js,.ts .",
@@ -45,6 +45,8 @@
     "eslint-plugin-unused-imports": "^3.0.0",
     "kysely-codegen": "^0.10.1",
     "prettier": "^3.0.3",
+    "tsconfig-paths": "^4.2.0",
+    "tscpaths": "^0.0.9",
     "tsx": "^3.12.8",
     "typescript": "^5.2.2"
   }

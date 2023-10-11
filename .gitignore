@@ -84,3 +84,4 @@ out
 .pnp.*
 
 images/
+dist/
