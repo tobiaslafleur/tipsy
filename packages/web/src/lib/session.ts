@@ -1,13 +1,13 @@
 import { cookies } from 'next/headers';
 
 const useServerSession = async () => {
-  const res = await fetch('http://localhost:4000/api/v1/auth/discord/me', {
+  const res = await fetch(`${process.env.BASE_URL}/api/v1/auth/discord/me`, {
     method: 'GET',
     credentials: 'include',
     headers: {
       Cookie: cookies()
         .getAll()
-        .map((cookie) => `${cookie.name}=${cookie.value}`)
+        .map(cookie => `${cookie.name}=${cookie.value}`)
         .join('; '),
     },
   });

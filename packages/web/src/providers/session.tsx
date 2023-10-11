@@ -37,7 +37,7 @@ const SessionContextProvider = ({
 
   const signOut = async () => {
     const res = await fetch(
-      'http://localhost:4000/api/v1/auth/discord/sign-out',
+      `${process.env.BASE_URL}/api/v1/auth/discord/sign-out`,
       {
         method: 'DELETE',
         credentials: 'include',
