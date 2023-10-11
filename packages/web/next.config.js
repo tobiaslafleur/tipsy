@@ -6,12 +6,9 @@ const nextConfig = {
       'wow.zamimg.com',
       'media.pitchfork.com',
       'localhost',
+      'tipsy.tobiaslafleur.com',
     ],
   },
-  env: {
-    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-  },
-  output: 'standalone',
 };
 
 module.exports = nextConfig;

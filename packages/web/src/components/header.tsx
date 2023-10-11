@@ -16,6 +16,8 @@ export default function Header() {
   const { session, signOut } = useSession();
   const pathname = usePathname();
 
+  console.log(process.env.NEXT_PUBLIC_BASE_URL);
+
   const [spinning, setSpinning] = useState(false);
 
   const avatarUrl = session?.avatar
@@ -90,7 +92,7 @@ export default function Header() {
             </>
           ) : (
             <Link
-              href={`${process.env.BASE_URL}/api/v1/auth/discord/sign-in`}
+              href={`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/auth/discord/sign-in`}
               className="inline-flex items-center rounded-md bg-[#5865F2] px-4 py-2 text-sm font-semibold tracking-wider text-gray-200 shadow transition hover:bg-[#4855e0] focus:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
             >
               <svg

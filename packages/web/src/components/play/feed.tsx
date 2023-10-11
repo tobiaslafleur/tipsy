@@ -31,7 +31,7 @@ export default function Feed({
                 <Image
                   fill
                   className="absolute object-cover"
-                  src={`${String(process.env.BASE_URL)}/images/${
+                  src={`${String(process.env.NEXT_PUBLIC_BASE_URL)}/images/${
                     feedItem.image
                   }`}
                   alt={feedItem.title}
