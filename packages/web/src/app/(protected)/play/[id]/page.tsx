@@ -1,6 +1,6 @@
 import Feed from '~/components/play/feed';
 import Tasks from '~/components/play/tasks';
-import { tipsyFetch } from '~/lib/utils';
+import { getFeed } from '~/lib/helpers';
 
 export default async function Page({
   params: { id },
@@ -31,12 +31,6 @@ export default async function Page({
       </aside>
     </main>
   );
-}
-
-export async function getFeed(gameId: string) {
-  return await tipsyFetch<FeedItem[]>(`/games/${gameId}/feed`, {
-    method: 'GET',
-  });
 }
 
 export type FeedItem = {

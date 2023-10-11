@@ -3,8 +3,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { Wine } from 'lucide-react';
 import Image from 'next/image';
-import { FeedItem, getFeed } from '~/app/(protected)/play/[id]/page';
+import { FeedItem } from '~/app/(protected)/play/[id]/page';
 import { ScrollArea, ScrollBar } from '~/components/ui/scroll-area';
+import { getFeed } from '~/lib/helpers';
 
 export default function Feed({
   initialFeed,
