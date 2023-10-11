@@ -30,7 +30,9 @@ async function main() {
           content: `${obj.team_name} has completed "${obj.title}" and has awarded their ${obj.weight} sips to ${obj.selected_team_name} ${users}`,
         });
 
-        channel?.send(`http://localhost:4000/images/${obj.image}`);
+        channel?.send(
+          `https://tipsy.tobiaslafleur.com/api/v1/images/${obj.image}`
+        );
       }
     });
   });
