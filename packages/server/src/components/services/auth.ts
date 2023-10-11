@@ -1,6 +1,6 @@
 import { InsertObject } from 'kysely';
-import { DB } from 'kysely-codegen';
 import pg from '~/db/pg';
+import { DB } from '~/db/pg/schema';
 import { fetch } from '~/lib/utils';
 import {
   DiscordOAuthMeResponse,

@@ -1,8 +1,8 @@
 import { InsertObject, UpdateObject } from 'kysely';
-import { DB } from 'kysely-codegen';
 import { jsonArrayFrom } from 'kysely/helpers/postgres';
 
 import pg from '~/db/pg';
+import { DB } from '~/db/pg/schema';
 
 async function createTeam(values: InsertObject<DB, 'teams'>) {
   return await pg

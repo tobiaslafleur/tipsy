@@ -1,7 +1,7 @@
 import { InsertObject, InsertResult, UpdateObject } from 'kysely';
-import { DB } from 'kysely-codegen';
 
 import pg from '~/db/pg';
+import { DB } from '~/db/pg/schema';
 
 async function createGame(values: InsertObject<DB, 'games'>) {
   return await pg

@@ -11,7 +11,7 @@
     "format": "prettier --write \"**/*.+(js|ts|json)\"",
     "pg:migrate": "tsx src/db/pg/migrate.ts",
     "pg:migrate-all": "tsx src/db/pg/migrate.ts --all",
-    "pg:types": "kysely-codegen --dialect postgres"
+    "pg:types": "kysely-codegen --dialect postgres --out-file ./src/db/pg/schema.d.ts"
   },
   "dependencies": {
     "argon2": "^0.31.1",
