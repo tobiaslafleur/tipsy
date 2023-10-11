@@ -20,7 +20,7 @@ app.use(helmet());
 
 app.use(deserializeUser);
 
-app.use('/images', express.static('images'));
+app.use('/api/v1/images', express.static('images'));
 
 app.use('/api/v1', router);
 
