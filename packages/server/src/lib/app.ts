@@ -18,6 +18,11 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
 
+app.use((req, res, next) => {
+  console.log(req.path);
+  next();
+});
+
 app.use(deserializeUser);
 
 app.use('/api/v1/images', express.static('images'));
