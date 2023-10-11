@@ -4,7 +4,7 @@ FROM node:alpine
 # Set working directory
 WORKDIR /usr/app
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install
 
 COPY . .
