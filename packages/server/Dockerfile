@@ -4,6 +4,8 @@ FROM node:alpine
 # Set working directory
 WORKDIR /usr/app
 
+RUN mkdir -p images
+
 COPY package.json ./
 RUN yarn install
 
