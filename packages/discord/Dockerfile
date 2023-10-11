@@ -12,7 +12,7 @@ COPY . .
 # Build app
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 4001
 
 # Run container as non-root (unprivileged) user
 # The node user is provided in the Node.js Alpine base image
