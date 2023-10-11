@@ -19,4 +19,4 @@ EXPOSE 3000
 USER node
 
 # Run npm start script when container starts
-CMD [ "npm", "start" ]
+CMD [ "node", ".next/standalone/server.js" ]
