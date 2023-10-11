@@ -31,9 +31,9 @@ export default function Feed({
                 <Image
                   fill
                   className="absolute object-cover"
-                  src={`${String(process.env.NEXT_PUBLIC_BASE_URL)}/images/${
-                    feedItem.image
-                  }`}
+                  src={`${String(
+                    process.env.NEXT_PUBLIC_BASE_URL
+                  )}api/v1/images/${feedItem.image}`}
                   alt={feedItem.title}
                 />
               </div>
