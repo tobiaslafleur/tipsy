@@ -5,68 +5,32 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useState } from 'react';
 import { Game } from '~/app/(protected)/join-game/page';
+import { Team } from '~/components/join-game/teamDropdown';
 
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import { useToast } from '~/components/ui/use-toast';
 import { tipsyFetch } from '~/lib/utils';
-import { useSession } from '~/providers/session';
 
-export type Team = {
-  id: string;
-  game_id: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-  users: User[];
-};
-
-export type User = {
-  id: string;
-  discord_id: string;
-  name: string;
-  avatar: string;
-  created_at: string;
-  updated_at: string;
-};
-
-export default function TeamDropdown({
+export default function TeamDropdownDashboard({
   teams,
   game,
 }: {
   teams: Team[];
   game: Game;
 }) {
-  const { session } = useSession();
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   const [hidden, setHidden] = useState(true);
 
   const { mutate } = useMutation({
-    mutationFn: async ({
-      teamId,
-      option,
-    }: {
-      teamId: string;
-      option: 'join' | 'leave';
-    }) => {
-      const method = option === 'join' ? 'POST' : 'DELETE';
-
-      return await tipsyFetch(`/teams/${teamId}/${option}`, {
-        method,
+    mutationFn: async ({ teamId }: { teamId: string }) => {
+      return await tipsyFetch(`/teams/${teamId}`, {
+        method: 'DELETE',
         credentials: 'include',
       });
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['teams', game.id]);
-    },
-    onError: () => {
-      toast({
-        variant: 'destructive',
-        title: 'You can only join one team per game!',
-        className: 'text-gray-200',
-      });
     },
   });
 
@@ -151,29 +115,14 @@ export default function TeamDropdown({
                       )}
                     </div>
                     <Button
-                      variant={
-                        team.users.find((u: any) => u.id === session?.id)
-                          ? 'destructive'
-                          : 'secondary'
-                      }
+                      variant="destructive"
                       className="select-none text-gray-200 disabled:bg-gray-400/20"
-                      onClick={() =>
-                        mutate({
-                          teamId: team.id,
-                          option: team.users.find(
-                            (u: any) => u.id === session?.id
-                          )
-                            ? 'leave'
-                            : 'join',
-                        })
-                      }
+                      onClick={() => mutate({ teamId: team.id })}
                       disabled={game.started || game.finished}
                     >
                       {game.started || game.finished
                         ? 'Unavailable'
-                        : team.users.find((u: any) => u.id === session?.id)
-                        ? 'Leave team'
-                        : 'join team'}
+                        : 'Delete team'}
                     </Button>
                   </div>
                 </div>

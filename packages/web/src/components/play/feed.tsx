@@ -20,19 +20,19 @@ export default function Feed({
     refetchInterval: 1000 * 5,
   });
 
-  console.log(feed);
-
   return (
     <ScrollArea className="flex h-full max-h-[79vh] rounded-md bg-header p-4 text-gray-200 shadow">
       <div className="flex flex-col gap-6 rounded-md">
-        {feed.length > 1 ? (
+        {feed.length > 0 ? (
           feed.map(feedItem => (
             <div key={feedItem.id} className="rounded-md bg-foreground/40">
               <div className="relative h-40 w-full">
                 <Image
                   fill
                   className="absolute object-cover"
-                  src={`https://media.pitchfork.com/photos/646f77043d4eea825df8639d/2:1/w_1920,c_limit/Dua-Lipa.jpg`}
+                  src={`${String(process.env.BASE_URL)}/images/${
+                    feedItem.image
+                  }`}
                   alt={feedItem.title}
                 />
               </div>

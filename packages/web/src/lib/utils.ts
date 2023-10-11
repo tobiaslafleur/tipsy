@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function tipsyFetch<T>(url: string, opts?: RequestInit) {
-  const queryUrl = `${process.env.BASE_URL}${url}`;
+  const queryUrl = `${process.env.BASE_URL}/api/v1${url}`;
 
   const res = await fetch(queryUrl, opts);
 

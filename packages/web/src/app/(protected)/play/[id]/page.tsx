@@ -43,6 +43,7 @@ export type FeedItem = {
   id: string;
   title: string;
   team_name: string;
+  image: string;
   selected_team_name: string;
   weight: number;
   completed: boolean;

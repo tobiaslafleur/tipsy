@@ -11,7 +11,10 @@ export default function MyGames() {
   const { data: games } = useQuery({
     queryKey: ['upcoming-games'],
     queryFn: async () => {
-      return await tipsyFetch<Game[]>('/games/');
+      return await tipsyFetch<Game[]>('/games/me', {
+        method: 'GET',
+        credentials: 'include',
+      });
     },
   });
 

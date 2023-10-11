@@ -40,7 +40,22 @@ async function deleteGameById(game_id: string) {
 }
 
 async function getGames() {
-  return await pg.selectFrom('games').selectAll().execute();
+  return await pg
+    .selectFrom('games')
+    .selectAll()
+    .orderBy('created_at asc')
+    .execute();
+}
+
+async function getMyGames(user_id: string) {
+  return await pg
+    .selectFrom('games')
+    .innerJoin('teams', 'teams.game_id', 'games.id')
+    .innerJoin('user_in_team', 'user_in_team.team_id', 'teams.id')
+    .innerJoin('users', 'users.id', 'user_in_team.user_id')
+    .where('users.id', '=', user_id)
+    .selectAll('games')
+    .execute();
 }
 
 async function startGame(game_id: string) {
@@ -84,7 +99,11 @@ async function startGame(game_id: string) {
       await Promise.all(promises);
     }
 
-    await trx.updateTable('games').set({ started: true }).execute();
+    await trx
+      .updateTable('games')
+      .where('id', '=', game_id)
+      .set({ started: true })
+      .execute();
   });
 }
 
@@ -99,12 +118,22 @@ async function updateGameTaskById(
     .execute();
 }
 
+async function stopGame(game_id: string) {
+  await pg
+    .updateTable('games')
+    .where('id', '=', game_id)
+    .set({ finished: true })
+    .execute();
+}
+
 export default {
   createGame,
   getGameById,
   updateGameById,
   deleteGameById,
   getGames,
+  getMyGames,
   startGame,
   updateGameTaskById,
+  stopGame,
 };

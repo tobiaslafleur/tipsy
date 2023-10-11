@@ -30,9 +30,7 @@ async function main() {
           content: `${obj.team_name} has completed "${obj.title}" and has awarded their ${obj.weight} sips to ${obj.selected_team_name} ${users}`,
         });
 
-        channel?.send(
-          'https://wow.zamimg.com/uploads/screenshots/normal/63719-stitches.jpg'
-        );
+        channel?.send(`http://localhost:4000/images/${obj.image}`);
       }
     });
   });

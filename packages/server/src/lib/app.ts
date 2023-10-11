@@ -20,6 +20,8 @@ app.use(helmet());
 
 app.use(deserializeUser);
 
+app.use('/images', express.static('images'));
+
 app.use('/api/v1', router);
 
 export default app;

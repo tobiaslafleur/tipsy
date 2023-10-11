@@ -12,7 +12,7 @@ export default function UpcomingGames({
 }) {
   return (
     <div className="mt-4 flex flex-col gap-8">
-      {initialGames.length > 1 ? (
+      {initialGames.length > 0 ? (
         initialGames?.map(game => (
           <div key={game.id} className="w-full rounded-md bg-header p-4">
             <div className="flex items-center justify-between">

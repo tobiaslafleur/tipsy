@@ -4,7 +4,6 @@ import gamesService from '~/components/services/games';
 import teamsService from '~/components/services/teams';
 import tasksService from '~/components/services/tasks';
 import sendDiscordNotification from '~/lib/discord';
-import { sleep } from '~/lib/utils';
 
 async function createGame(request: Request, response: Response) {
   try {
@@ -79,6 +78,20 @@ async function getGames(request: Request, response: Response) {
   }
 }
 
+async function getMyGames(request: Request, response: Response) {
+  try {
+    const games = await gamesService.getMyGames(request.session?.user.id || '');
+
+    if (!games) {
+      return response.status(500).send({ error: 'Something went wrong' });
+    }
+
+    return response.status(200).send(games);
+  } catch (error) {
+    return response.status(500).send({ error });
+  }
+}
+
 async function getTeamsByGameId(request: Request, response: Response) {
   try {
     const games = await teamsService.getTeamsByGameId(request.params.id || '');
@@ -129,10 +142,10 @@ async function getTasksByUserId(request: Request, response: Response) {
 
 async function updateGameTaskById(request: Request, response: Response) {
   try {
-    await gamesService.updateGameTaskById(
-      request.params.task_id || '',
-      request.body
-    );
+    await gamesService.updateGameTaskById(request.params.task_id || '', {
+      selected_team: request.body.selected_team,
+      image: request.file?.filename || '',
+    });
 
     sendDiscordNotification(request.params.task_id || '');
 
@@ -164,16 +177,29 @@ async function startGame(request: Request, response: Response) {
   }
 }
 
+async function stopGame(request: Request, response: Response) {
+  try {
+    await gamesService.stopGame(request.params.id || '');
+
+    return response.sendStatus(200);
+  } catch (error) {
+    console.log(error);
+    return response.status(500).send({ error });
+  }
+}
+
 export default {
   createGame,
   getGameById,
   updateGameById,
   deleteGameById,
   getGames,
+  getMyGames,
   getTeamsByGameId,
   getTasksByGameId,
   getTasksByUserId,
   updateGameTaskById,
   getFeed,
   startGame,
+  stopGame,
 };

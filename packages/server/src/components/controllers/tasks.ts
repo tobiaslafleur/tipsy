@@ -24,7 +24,9 @@ async function getTaskById(request: Request, response: Response) {
     if (!task) {
       return response.status(404).send({ error: 'Resource not found' });
     }
-  } catch (error) {}
+  } catch (error) {
+    return response.status(500).send({ error });
+  }
 }
 
 async function updateTaskById(request: Request, response: Response) {
@@ -40,7 +42,6 @@ async function updateTaskById(request: Request, response: Response) {
 
     return response.status(200).send(task);
   } catch (error) {
-    console.log(error);
     return response.status(500).send({ error });
   }
 }

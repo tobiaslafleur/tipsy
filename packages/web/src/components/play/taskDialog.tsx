@@ -25,6 +25,7 @@ export default function TaskDialog({
     resolver: zodResolver(formSchema),
     defaultValues: {
       team: '',
+      file: undefined,
     },
   });
 
@@ -61,4 +62,5 @@ export default function TaskDialog({
 
 const formSchema = z.object({
   team: z.string().min(1, 'Please select a team'),
+  file: z.any(),
 });

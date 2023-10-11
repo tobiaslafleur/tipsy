@@ -37,7 +37,7 @@ export default async function Page() {
 }
 
 export async function getGames() {
-  return await tipsyFetch<Game[]>('/games?started=false&running=false', {
+  return await tipsyFetch<Game[]>('/games', {
     method: 'GET',
     cache: 'no-cache',
   });

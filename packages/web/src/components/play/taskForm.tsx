@@ -1,3 +1,5 @@
+'use client';
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 import { Team } from '~/components/join-game/teamDropdown';
@@ -20,6 +22,8 @@ import {
   SelectValue,
 } from '~/components/ui/select';
 import { Button } from '~/components/ui/button';
+import { Input } from '~/components/ui/input';
+import { useToast } from '~/components/ui/use-toast';
 
 export default function TaskForm({
   task,
@@ -32,6 +36,7 @@ export default function TaskForm({
   form: UseFormReturn<
     {
       team: string;
+      file?: any;
     },
     any,
     undefined
@@ -39,6 +44,8 @@ export default function TaskForm({
   setOpen: (val: boolean) => void;
 }) {
   const queryClient = useQueryClient();
+
+  const { toast } = useToast();
 
   const { data: teams } = useQuery({
     queryKey: ['teams_selector', gameId],
@@ -53,17 +60,23 @@ export default function TaskForm({
     mutationFn: async ({
       taskId,
       selectedTeam,
+      file,
     }: {
       taskId: string;
       selectedTeam: string;
+      file: any;
     }) => {
+      if (!file) throw new Error('No file provided');
+
+      const formData = new FormData();
+
+      formData.append('file', file);
+      formData.append('selected_team', selectedTeam);
+
       return await tipsyFetch(`/games/${gameId}/tasks/${taskId}`, {
         method: 'PUT',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ selected_team: selectedTeam }),
+        body: formData,
       });
     },
     onSuccess: () => {
@@ -71,13 +84,22 @@ export default function TaskForm({
       queryClient.invalidateQueries(['tasks', gameId]);
       setOpen(false);
     },
+    onError: error => {
+      if (error instanceof Error && error.message === 'No file provided') {
+        toast({
+          variant: 'destructive',
+          title: 'Please select a file to upload!',
+          className: 'text-gray-200',
+        });
+      }
+    },
   });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(({ team }) =>
-          mutate({ selectedTeam: team, taskId: task.id })
+        onSubmit={form.handleSubmit(({ team, file }) =>
+          mutate({ selectedTeam: team, file, taskId: task.id })
         )}
       >
         <FormField
@@ -103,6 +125,33 @@ export default function TaskForm({
               <FormMessage />
               <FormDescription>
                 The team that is awarded the sips.
+              </FormDescription>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="file"
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormItem className="text-gray-200">
+              <FormLabel id="team">Upload a picture</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  value={value?.fileName}
+                  onChange={event => {
+                    if (!event.target.files) return;
+
+                    onChange(event.target.files[0]);
+                  }}
+                  accept="image/*"
+                  className="text-gray-200  file:text-gray-200"
+                  type="file"
+                />
+              </FormControl>
+              <FormMessage />
+              <FormDescription>
+                The screenshot you wish to upload.
               </FormDescription>
             </FormItem>
           )}
