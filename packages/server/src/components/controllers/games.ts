@@ -68,6 +68,8 @@ async function getGames(request: Request, response: Response) {
   try {
     const games = await gamesService.getGames();
 
+    console.log('getting games');
+
     if (!games) {
       return response.status(500).send({ error: 'Something went wrong' });
     }
